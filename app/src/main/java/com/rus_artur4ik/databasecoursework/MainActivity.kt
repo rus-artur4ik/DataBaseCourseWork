@@ -4,7 +4,6 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -59,8 +58,6 @@ class MainActivity : AppCompatActivity() {
         : SQLiteOpenHelper(context, "myDB", null, 1) {
 
         override fun onCreate(db: SQLiteDatabase) {
-
-            Log.d(LOG_TAG, "--- onCreate database ---");
             // создаем таблицу с полями
             db.execSQL(
                 "create table main ("

@@ -1,5 +1,8 @@
 package com.rus_artur4ik.databasecoursework
 
+import android.app.AlertDialog
+import android.app.Dialog
+import android.content.DialogInterface
 import android.database.Cursor
 import android.os.Bundle
 import android.util.Log
@@ -19,17 +22,32 @@ import com.rus_artur4ik.databasecoursework.databinding.FragmentFirstBinding
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
-class FirstFragment : Fragment() {
+class NoteListFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
-    val dbHelper by lazy { DBHelper(this.context); }
+    private val dbHelper by lazy { DatabaseHelper(DBHelper(this.context)) }
 
-    val adapter by lazy { ItemsAdapter() }
+    private val onItemLongClick: (Int, View) -> Unit = { id, _ ->
+        AlertDialog.Builder(requireContext())
+            .setTitle("Удаление карточки")
+            .setMessage("Вы действительно хотите удалить эту карточку?")
+            .setPositiveButton("Да") { dialog, _ ->
+                dbHelper.removeItemFromDb(id)
+                notifyDataChanged()
+                dialog.dismiss()
+            }
+            .setNegativeButton("Нет") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    val adapter by lazy { ItemsAdapter(
+        onCardLongClick = onItemLongClick
+    ) }
 
 
 //    private val items = listOf<TargetItem>(
@@ -57,15 +75,18 @@ class FirstFragment : Fragment() {
             StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         binding.itemsRecycler.adapter = adapter
 
-        binding.fab.setOnClickListener { view ->
+        binding.fab.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
+        notifyDataChanged()
+    }
 
-        val items = getItemsFromDB()
+    private fun notifyDataChanged() {
+        val items = dbHelper.getItemsFromDB()
         adapter.items = items
         adapter.notifyDataSetChanged()
     }
@@ -73,60 +94,5 @@ class FirstFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun getItemsFromDB(): List<TargetItem> {
-        val result = mutableListOf<TargetItem>()
-        val checkboxes = mutableListOf<Checkbox>()
-        val db = dbHelper.writableDatabase
-        Log.d(LOG_TAG, "--- Rows in mytable: ---")
-
-        val chCursor: Cursor = db.query("checkboxes", null, null, null, null, null, null)
-
-        if (chCursor.moveToFirst()) {
-            val idColIndex: Int = chCursor.getColumnIndex("id")
-            val targetIdColIndex: Int = chCursor.getColumnIndex("target_id")
-            val titleColIndex: Int = chCursor.getColumnIndex("title")
-            val checkedColIndex: Int = chCursor.getColumnIndex("title")
-
-            do {
-                val checkbox = Checkbox(
-                    chCursor.getInt(idColIndex),
-                    chCursor.getInt(targetIdColIndex),
-                    chCursor.getString(titleColIndex),
-                    chCursor.getInt(checkedColIndex) != 0
-                )
-                checkboxes.add(checkbox)
-                Log.d(
-                    LOG_TAG,
-                    checkbox.toString()
-                )
-
-            } while (chCursor.moveToNext())
-        } else Log.d(LOG_TAG, "0 rows")
-        chCursor.close()
-
-        val mainCursor: Cursor = db.query("main", null, null, null, null, null, null)
-
-        if (mainCursor.moveToFirst()) {
-            val idColIndex: Int = mainCursor.getColumnIndex("id")
-            val titleColIndex: Int = mainCursor.getColumnIndex("title")
-            do {
-                val id = mainCursor.getInt(idColIndex)
-                val title = mainCursor.getString(titleColIndex).toString()
-                val cbs = checkboxes.filter { it.target_id == id }
-
-                val item = TargetItem(id, title, cbs)
-                result.add(item)
-                Log.d(
-                    LOG_TAG,
-                    item.toString()
-                )
-
-            } while (mainCursor.moveToNext())
-        } else Log.d(LOG_TAG, "0 rows")
-        mainCursor.close()
-
-        return result
     }
 }

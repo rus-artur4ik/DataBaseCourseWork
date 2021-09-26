@@ -21,7 +21,7 @@ import com.rus_artur4ik.databasecoursework.databinding.FragmentSecondBinding
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
  */
-class SecondFragment : Fragment() {
+class NewNoteFragment : Fragment() {
 
     val dbHelper by lazy { MainActivity.DBHelper(this.context); }
 

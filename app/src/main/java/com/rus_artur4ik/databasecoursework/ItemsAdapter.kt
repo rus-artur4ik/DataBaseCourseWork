@@ -8,8 +8,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class ItemsAdapter(var items: List<TargetItem> = listOf())
-    : RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
+class ItemsAdapter(
+    var items: List<TargetItem> = listOf(),
+    private val onCardLongClick: (Int, View) -> Unit
+): RecyclerView.Adapter<ItemsAdapter.ItemViewHolder>() {
 
     class ItemViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val titleTextView = itemView.findViewById<TextView>(R.id.title)
@@ -23,6 +25,11 @@ class ItemsAdapter(var items: List<TargetItem> = listOf())
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+        holder.itemView.setOnLongClickListener{
+            onCardLongClick(items[position].id, it)
+            true
+        }
+
         holder.titleTextView.text = items[position].title
 
         holder.checkboxesList.removeAllViews()
