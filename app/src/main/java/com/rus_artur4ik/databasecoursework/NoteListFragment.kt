@@ -1,23 +1,18 @@
 package com.rus_artur4ik.databasecoursework
 
 import android.app.AlertDialog
-import android.app.Dialog
-import android.content.DialogInterface
-import android.database.Cursor
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.google.android.material.snackbar.Snackbar
-import com.rus_artur4ik.databasecoursework.MainActivity.Companion.LOG_TAG
-import com.rus_artur4ik.databasecoursework.MainActivity.DBHelper
 import com.rus_artur4ik.databasecoursework.TargetItem.*
 import com.rus_artur4ik.databasecoursework.databinding.FragmentFirstBinding
-
+import com.rus_artur4ik.databasecoursework.db.DatabaseHelper
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -28,7 +23,7 @@ class NoteListFragment : Fragment() {
 
     private val binding get() = _binding!!
 
-    private val dbHelper by lazy { DatabaseHelper(DBHelper(this.context)) }
+    private val dbHelper by lazy { DatabaseHelper.getDatabase(requireContext()) }
 
     private val onItemLongClick: (Int, View) -> Unit = { id, _ ->
         AlertDialog.Builder(requireContext())
@@ -45,18 +40,34 @@ class NoteListFragment : Fragment() {
             .show()
     }
 
-    val adapter by lazy { ItemsAdapter(
-        onCardLongClick = onItemLongClick
+    private val onFieldChecked: (Int, Boolean) -> Unit = { id, checked ->
+        dbHelper.changeCheckboxState(id, checked)
+    }
+
+    private val onProgressBarClicked: (Int) -> Unit = { id ->
+        val v = LayoutInflater.from(context).inflate(R.layout.dialog_set_progressbar, null)
+        AlertDialog.Builder(requireContext())
+            .setTitle("Изменить значение прогресса")
+            .setView(v)
+            .setPositiveButton("Да") { dialog, _ ->
+                val progress = v.findViewById<EditText>(R.id.newProgress).text.toString().toIntOrNull()
+                progress?.let {
+                    dbHelper.changeProgressbarState(id, it)
+                    notifyDataChanged()
+                    dialog.dismiss()
+                } ?: Toast.makeText(context, "Неверные введенные данные", Toast.LENGTH_SHORT).show()
+            }
+            .setNegativeButton("Нет") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private val adapter by lazy { ItemsAdapter(
+        onCardLongClick = onItemLongClick,
+        onCheckedChangeListener = onFieldChecked,
+        onProgressBarClickListener = onProgressBarClicked
     ) }
-
-
-//    private val items = listOf<TargetItem>(
-//        TargetItem(1, "Купить телевизор", listOf(true to "Заработать 50000 рублей или долларов", false to "Сходить в магазин", false to "PROFIT")),
-//        TargetItem(2, "Купить телевизор", listOf(true to "Заработать 50000", false to "Сходить в магазин", false to "PROFIT")),
-//        TargetItem(3, "Купить телевизор", listOf(true to "Заработать 50000", false to "Сходить в магазин", false to "PROFIT")),
-//        TargetItem(4, "Купить телевизор", listOf(true to "Заработать 50000", false to "Сходить в магазин", false to "PROFIT", true to "Заработать 50000", false to "Сходить в магазин")),
-//        TargetItem(5, "Купить телефон", listOf(true to "Заработать 50000", false to "Сходить в магазин", false to "PROFIT")),
-//    )
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,

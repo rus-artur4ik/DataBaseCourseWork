@@ -54,31 +54,6 @@ class MainActivity : AppCompatActivity() {
                 || super.onSupportNavigateUp()
     }
 
-    class DBHelper(context: Context?)
-        : SQLiteOpenHelper(context, "myDB", null, 1) {
-
-        override fun onCreate(db: SQLiteDatabase) {
-            // создаем таблицу с полями
-            db.execSQL(
-                "create table main ("
-                        + "id integer primary key autoincrement,"
-                        + "title text"
-                        + ");"
-            )
-
-            db.execSQL(
-                "create table checkboxes ("
-                        + "id integer primary key autoincrement,"
-                        + "target_id integer,"
-                        + "title text,"
-                        + "checked integer"
-                        + ");"
-            )
-        }
-
-        override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {}
-    }
-
     companion object {
         const val LOG_TAG = "MY"
     }
