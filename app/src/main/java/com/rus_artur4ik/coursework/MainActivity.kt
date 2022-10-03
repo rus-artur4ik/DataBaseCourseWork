@@ -1,8 +1,5 @@
-package com.rus_artur4ik.databasecoursework
+package com.rus_artur4ik.coursework
 
-import android.content.Context
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,7 +8,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import com.rus_artur4ik.databasecoursework.databinding.ActivityMainBinding
+import com.rus_artur4ik.coursework.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {

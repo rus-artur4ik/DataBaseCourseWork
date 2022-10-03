@@ -1,4 +1,4 @@
-package com.rus_artur4ik.databasecoursework
+package com.rus_artur4ik.coursework
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -7,12 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.rus_artur4ik.databasecoursework.TargetItem.*
-import com.rus_artur4ik.databasecoursework.databinding.FragmentFirstBinding
-import com.rus_artur4ik.databasecoursework.db.DatabaseHelper
+import com.rus_artur4ik.coursework.databinding.FragmentFirstBinding
+import com.rus_artur4ik.coursework.db.DatabaseHelper
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -96,14 +96,16 @@ class NoteListFragment : Fragment() {
         notifyDataChanged()
     }
 
-    private fun notifyDataChanged() {
-        val items = dbHelper.getItemsFromDB()
-        adapter.items = items
-        adapter.notifyDataSetChanged()
-    }
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun notifyDataChanged() {
+        val items = dbHelper.getItemsFromDB()
+        adapter.items = items
+        binding.emptyText.isVisible = items.isEmpty()
+        binding.emptyArrow.isVisible = items.isEmpty()
+        adapter.notifyDataSetChanged()
     }
 }

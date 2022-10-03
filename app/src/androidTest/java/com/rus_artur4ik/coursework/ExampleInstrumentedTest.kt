@@ -1,4 +1,4 @@
-package com.rus_artur4ik.databasecoursework
+package com.rus_artur4ik.coursework
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

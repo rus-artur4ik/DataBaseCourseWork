@@ -1,10 +1,9 @@
-package com.rus_artur4ik.databasecoursework
+package com.rus_artur4ik.coursework
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout

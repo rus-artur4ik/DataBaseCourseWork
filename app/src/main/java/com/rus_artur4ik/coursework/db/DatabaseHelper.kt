@@ -1,12 +1,7 @@
-package com.rus_artur4ik.databasecoursework.db
+package com.rus_artur4ik.coursework.db
 
-import android.content.ContentValues
 import android.content.Context
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
-import android.database.sqlite.SQLiteOpenHelper
-import android.util.Log
-import com.rus_artur4ik.databasecoursework.TargetItem
+import com.rus_artur4ik.coursework.TargetItem
 
 class DatabaseHelper {
     companion object {

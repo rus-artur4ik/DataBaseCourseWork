@@ -1,4 +1,4 @@
-package com.rus_artur4ik.databasecoursework
+package com.rus_artur4ik.coursework
 
 import android.os.Bundle
 import android.view.Gravity
@@ -11,8 +11,8 @@ import androidx.core.view.children
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
-import com.rus_artur4ik.databasecoursework.databinding.FragmentSecondBinding
-import com.rus_artur4ik.databasecoursework.db.DatabaseHelper
+import com.rus_artur4ik.coursework.databinding.FragmentSecondBinding
+import com.rus_artur4ik.coursework.db.DatabaseHelper
 
 
 /**

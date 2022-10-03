@@ -1,4 +1,4 @@
-package com.rus_artur4ik.databasecoursework
+package com.rus_artur4ik.coursework
 
 import android.view.LayoutInflater
 import android.view.View
